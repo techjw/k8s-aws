@@ -1,4 +1,4 @@
-## Kubernetes on Google Cloud Platform via Kismatic Enterprise Toolkit
+## Kubernetes on AWS via Kismatic Enterprise Toolkit
 The focus of this code is to deploy a basic Kubernetes cluster into AWS for testing and training purposes.
 Upon successful completion, the following instances will have been provisioned:
   * 1 k8s master node, with etcd co-located
