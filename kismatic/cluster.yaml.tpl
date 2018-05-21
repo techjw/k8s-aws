@@ -18,7 +18,7 @@ cluster:
 
   ssh:
     user: %aws_user%
-    ssh_key: %ssh_key%
+    ssh_key: %workdir%/../ssh/cluster.pem
     ssh_port: 22
 
   kube_apiserver:
@@ -88,7 +88,7 @@ add_ons:
       replicas: 2
 
   heapster:
-    disable: true
+    disable: false
     options:
       heapster:
         replicas: 2
@@ -116,43 +116,46 @@ add_ons:
 etcd:
   expected_count: 1
   nodes:
-  - host: "%deploy_name%-master-1"
-    ip: "%master1_pubip%"
-    internalip: "%master1_ip%"
+  - host: "%master_host%"
+    ip: "%master_pubip%"
+    internalip: "%master_ip%"
 
 master:
   expected_count: 1
-  load_balanced_fqdn: "%master1_pubip%"
-  load_balanced_short_name: "%master1_pubip%"
+  load_balanced_fqdn: "%master_pubdns%"
+  load_balanced_short_name: "%master_ip%"
   nodes:
-  - host: "%deploy_name%-master-1"
-    ip: "%master1_pubip%"
-    internalip: "%master1_ip%"
+  - host: "%master_host%"
+    ip: "%master_pubip%"
+    internalip: "%master_ip%"
     labels:
       component: "master"
 
 worker:
   expected_count: 2
   nodes:
-  - host: "%deploy_name%-worker-1"
+  - host: "%worker1_host%"
     ip: "%worker1_pubip%"
     internalip: "%worker1_ip%"
     labels:
       component: "worker"
-  - host: "%deploy_name%-worker-2"
+      node-role.kubernetes.io/worker: ""
+  - host: "%worker2_host%"
     ip: "%worker2_pubip%"
     internalip: "%worker2_ip%"
     labels:
       component: "worker"
+      node-role.kubernetes.io/worker: ""
 
 ingress:
   expected_count: 1
   nodes:
-  - host: "%deploy_name%-ingress-1"
-    ip: "%ingress1_pubip%"
-    internalip: "%ingress1_ip%"
+  - host: "%ingress_host%"
+    ip: "%ingress_pubip%"
+    internalip: "%ingress_ip%"
     labels:
       component: "ingress"
+      node-role.kubernetes.io/ingress: ""
 
 storage:
   expected_count: 0
