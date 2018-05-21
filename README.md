@@ -35,20 +35,17 @@ Other settings can be configured such as instances sizes and region, as listed i
   make create-instances
   ```
 
-2. Update the values in [kismatic/env.cfg](kismatic/env.cfg)
-  * Replace the AWS user and SSH key values
-  * Update the IP addresses with the private and public IPs for your provisioned VMs and load balancer.
-  * _Note_: you may change the deployment name in the [Makefile](Makefile)
-
-3. Once the deployment completes, setup and execute Kismatic Enterprise Toolkit:
+1. Once the deployment completes, setup and execute Kismatic Enterprise Toolkit:
   ```
   make install-kismatic
   make prepare-kubernetes
   make install-kubernetes
   ```
+  * _Note_: you may change the deployment name in the [Makefile](Makefile), or by passing `DEPLOY=myname` to the prepare and install commands.
 
-4. When finished with the cluster, you may destroy all the resources that were provisioned. To do so, run the following:
+1. When finished with the cluster, you may destroy all the resources that were provisioned. To do so, run the following:
   ```
   make destroy-instances
   make remove-kismatic
   ```
+  * _Note_: If you changed the deployment name via command line, pass the name to the destroy command as well.
