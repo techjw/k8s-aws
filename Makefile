@@ -14,6 +14,7 @@ destroy-instances:
 	cd terraform && rm terraform.tfstate terraform.tfstate.backup
 	rm ssh/cluster.pem ssh/cluster.pem.pub && rmdir ssh
 	rm kismatic/generated/kubeconfig && rm -rf kismatic/generated/keys
+	rm kismatic/env.cfg kismatic/$(DEPLOY)-cluster.yaml kismatic/$(DEPLOY)-aws.conf
 
 install-kismatic:
 	cd kismatic && ./ket.sh install
@@ -22,7 +23,8 @@ remove-kismatic:
 	cd kismatic && ./ket.sh remove
 
 prepare-kubernetes:
-	grep DEPLOY_NAME=$(DEPLOY) kismatic/env.cfg || echo DEPLOY_NAME=$(DEPLOY) >> kismatic/env.cfg
+	cd terraform && terraform output |grep -v kube_login |sed -e "s/\ =\ /=/g" > ../kismatic/env.cfg
+	echo deploy_name=$(DEPLOY) >> kismatic/env.cfg
 	cd kismatic && ./update-plan.sh
 	cd kismatic && ./kismatic install validate -f $(DEPLOY)-cluster.yaml
 
