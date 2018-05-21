@@ -1,4 +1,5 @@
-variable "ami_id" { default = "ami-9c56efe3" }
+variable "ami_id"   { default = "ami-9c56efe3" }
+variable "ami_user" { default = "ubuntu" }
 
 variable "master_type"          { default = "t2.large" }
 variable "master_ebs_optimized" { default = false }

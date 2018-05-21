@@ -129,27 +129,7 @@ resource "aws_key_pair" "kubernetes" {
 }
 
 resource "aws_iam_role" "kubernetes" {
-  name = "${var.project}-role"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role" "kubeapi" {
-  name = "${var.project}api-role"
+  name = "${var.project}-cloudprovider-role"
 
   assume_role_policy = <<EOF
 {
@@ -169,42 +149,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "kubernetes" {
-  name = "${var.project}-policy"
+  name = "${var.project}-cloudprovider-policy"
   role = "${aws_iam_role.kubernetes.id}"
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "autoscaling:Describe*",
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": "ec2:Describe*",
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": "elasticloadbalancing:Describe*",
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Action": ["s3:Get*", "s3:List*"],
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:s3:::kubernetes-*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "kubeapi" {
-  name = "${var.project}api-policy"
-  role = "${aws_iam_role.kubeapi.id}"
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -239,9 +185,4 @@ EOF
 resource "aws_iam_instance_profile" "kubernetes" {
   name = "${var.project}-instance-profile"
   role = "${aws_iam_role.kubernetes.name}"
-}
-
-resource "aws_iam_instance_profile" "kubeapi" {
-  name = "${var.project}api-instance-profile"
-  role = "${aws_iam_role.kubeapi.name}"
 }
