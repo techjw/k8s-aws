@@ -2,7 +2,7 @@
 # Usage: ket.sh install [version]
 #        ket.sh remove
 
-VERSION=${2:-"v1.9.2"}
+VERSION=${2:-"v1.11.1"}
 
 case $1 in
   "install")
