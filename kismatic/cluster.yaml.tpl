@@ -1,6 +1,6 @@
 cluster:
   name: awsk8s
-  version: v1.9.6
+  version: v1.10.3
   disable_package_installation: false
   disconnected_installation: false
 
@@ -35,9 +35,7 @@ cluster:
       kube-reserved: "cpu=500m,memory=500Mi"
       system-reserved: "cpu=500m,memory=500Mi"
 
-
   cloud_provider:
-
     # Options: aws|azure|cloudstack|fake|gce|mesos|openstack|ovirt|photon|rackspace|vsphere
     # Leave config empty if provider does not require a path to a config file.
     provider: "aws"
@@ -74,6 +72,8 @@ add_ons:
     # Options: calico|weave|contiv|custom
     provider: calico
     options:
+      portmap:
+        disable: false
       calico:
         mode: overlay
         log_level: info
@@ -102,6 +102,8 @@ add_ons:
 
   dashboard:
     disable: false
+    options:
+      service_type: ClusterIP
 
   package_manager:
     disable: false
@@ -130,6 +132,7 @@ master:
     internalip: "%master_ip%"
     labels:
       component: "master"
+    taints: []
 
 worker:
   expected_count: 2
@@ -139,13 +142,14 @@ worker:
     internalip: "%worker1_ip%"
     labels:
       component: "worker"
-      node-role.kubernetes.io/worker: ""
+    taints: []
+
   - host: "%worker2_host%"
     ip: "%worker2_pubip%"
     internalip: "%worker2_ip%"
     labels:
       component: "worker"
-      node-role.kubernetes.io/worker: ""
+    taints: []
 
 ingress:
   expected_count: 1
@@ -156,10 +160,8 @@ ingress:
     labels:
       component: "ingress"
       node-role.kubernetes.io/ingress: ""
+    taints: []
 
 storage:
   expected_count: 0
   nodes: []
-
-nfs:
-  nfs_volume: []
